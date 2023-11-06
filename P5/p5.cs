@@ -2,55 +2,41 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-namespace ConsoleApplication7
+
+namespace ConsoleApplication12
 {
     class Program
     {
-        public static String guardar = "";
-        static void serieP(object numero)
+        static int n = 10000;
+        static int[] guardar = new int[n+1];
+        static object lockObject = new object();
+        static int i = 0;
+        static void serieP(object state)
         {
-            String serie = "";
-            int n = (int)numero;
-            for (int i = 0; i < n; i++)
+            int lugar;
+            while ((lugar = (Interlocked.Increment(ref i)) - 1) < n)
             {
-                if (i % 2 == 0)
+                if (lugar % 2 == 0)
                 {
-                    serie = serie + (Math.Pow((i / 2 + 1), 2) + 1) + ",";
+                    guardar[lugar] = (int)Math.Pow(lugar / 2 + 1, 2) + 1;
                 }
-                else
+                else if(lugar%2==1)
                 {
-                    serie = serie + (i + 1) + ",";
+                    guardar[lugar] = (lugar + 1);
                 }
             }
-            guardar = guardar+serie;
-
-        }
-        static void serieP2(object numero)
-        {
-            int n = (int)numero;
-            String serie = "";
-            for (int i = 5000; i < n; i++)
-            {
-                if (i % 2 == 0)
-                {
-                    serie =serie + (Math.Pow((i / 2 + 1), 2) + 1) + ",";
-                }
-                else
-                {
-                    serie = serie + (i + 1) + ",";
-                }
-            }
-            guardar = guardar + serie;
         }
         static void Main(string[] args)
         {
-            Thread p1 = new Thread(serieP)  { Name = "p1" };
-            Thread p2 = new Thread(serieP2) { Name = "p2" };
-            p1.Start(5000);
-            p2.Start(10000);
-            p1.Join();
-            p2.Join();
-            Console.WriteLine(guardar);
+            for (int j = 0; j < 4; j++)
+            {
+                ThreadPool.QueueUserWorkItem(serieP);
+            }
+            Thread.Sleep(1000);
+            for (int j = 0; j < n; j++)
+            {
+                Console.Write(guardar[j] + ",");
+            }
             Console.ReadKey();
         }
     }
