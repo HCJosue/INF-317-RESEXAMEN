@@ -10,10 +10,10 @@ void concatenar(char c,char *cadena){
 int main(int argc, char *argv[]){
 int procesador,nprocesador,i,suma;
 int nenvio=0,vrecepcion;
-char a[50]="";
-char b[50]="";
 char frase[]="tres tristes tigres trigaban trigo por culpa del bolivar";
 int n=strlen(frase);
+char a[50]="";
+char b[50]="";
 MPI_Init(&argc,&argv);
 MPI_Comm_rank(MPI_COMM_WORLD,&procesador);
 MPI_Comm_size(MPI_COMM_WORLD,&nprocesador);
@@ -47,7 +47,7 @@ else{
   MPI_Recv(&nenvio,1,MPI_INT,procesador-1,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
   MPI_Recv(&a,f,MPI_INT,procesador-1,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
   MPI_Recv(&b,f,MPI_INT,procesador-1,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-  for(i=(procesador)*f;i<f*(procesador+1);i++){
+  for(i=(procesador)*f;i<n;i++){
 	if((frase[i]==' ')){
           if(nenvio%2==0){
 	     concatenar(' ',a);
@@ -100,3 +100,4 @@ else{
 }
 MPI_Finalize();
 }
+
