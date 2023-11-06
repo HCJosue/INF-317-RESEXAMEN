@@ -23,7 +23,7 @@ namespace ConsoleApplication6
         }
         static void Main(string[] args)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 4; i++)
             {
                 ThreadPool.QueueUserWorkItem(calculopi);
             }
